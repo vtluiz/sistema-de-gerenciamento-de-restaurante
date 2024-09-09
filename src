@@ -1,0 +1,109 @@
+-- Dropar o banco de dados se já existir e criar um novo
+DROP DATABASE IF EXISTS restaurante;
+CREATE DATABASE restaurante;
+USE restaurante;
+
+-- Criação da tabela cliente
+CREATE TABLE cliente (
+    clienteID INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50) NOT NULL
+);
+
+-- Criação da tabela mesa
+CREATE TABLE mesa (
+    mesaID INT PRIMARY KEY AUTO_INCREMENT,
+    capacidade INT NOT NULL,
+    status VARCHAR(20) NOT NULL
+);
+
+-- Criação da tabela cardápio
+CREATE TABLE cardapio (
+    cardapioID INT PRIMARY KEY AUTO_INCREMENT,
+    nome_item VARCHAR(255) NOT NULL,
+    preco DECIMAL(10, 2) NOT NULL,
+    disponibilidade BOOLEAN DEFAULT TRUE
+);
+
+-- Criação da tabela pedidos
+CREATE TABLE pedidos (
+    id_pedido INT PRIMARY KEY AUTO_INCREMENT,
+    id_mesa INT,
+    status_pedido VARCHAR(50),
+    data_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_mesa) REFERENCES mesa(mesaID) -- Correção de referência à tabela mesa
+);
+
+-- Criação da tabela itens_pedido com ON DELETE CASCADE
+CREATE TABLE itens_pedido (
+    id_item_pedido INT PRIMARY KEY AUTO_INCREMENT,
+    id_pedido INT,
+    id_item INT,
+    quantidade INT NOT NULL,
+    FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido),
+    FOREIGN KEY (id_item) REFERENCES cardapio(cardapioID) ON DELETE CASCADE -- Adicionado ON DELETE CASCADE
+);
+
+-- Criação da tabela pagamentos
+CREATE TABLE pagamentos (
+    id_pagamento INT PRIMARY KEY AUTO_INCREMENT,
+    id_pedido INT,
+    valor_total DECIMAL(10, 2),
+    metodo_pagamento VARCHAR(50),
+    data_pagamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido)
+);
+
+-- Inserção de dados na tabela cliente
+INSERT INTO cliente (nome) VALUES
+('Ricardo'),
+('Kevin e Deolane');
+
+-- Inserção de dados na tabela mesa
+INSERT INTO mesa (capacidade, status) VALUES
+(2, 'disponível'),
+(3, 'disponível');
+
+-- Inserção de dados na tabela cardápio
+INSERT INTO cardapio (nome_item, preco, disponibilidade) VALUES
+('Carne de Javali', 55.00, TRUE),
+('Costela de Boi', 75.00, TRUE);
+
+-- Inserção de dados na tabela pedidos
+INSERT INTO pedidos (id_mesa, status_pedido, data_pedido) VALUES
+(1, 'disponível', '2024-09-09 12:00:00'),
+(2, 'disponível', '2024-09-10 13:00:00');
+
+-- Inserção de dados na tabela itens_pedido
+INSERT INTO itens_pedido (id_pedido, id_item, quantidade) VALUES
+(1, 1, 1),
+(2, 2, 1);
+
+-- Inserção de dados na tabela pagamentos
+INSERT INTO pagamentos (id_pedido, valor_total, metodo_pagamento, data_pagamento) VALUES
+(1, 55.00, 'cartão de crédito', '2024-09-09 14:00:00'),
+(2, 75.00, 'pix', '2024-09-10 15:00:00');
+
+-- Consulta para obter os itens mais vendidos
+SELECT nome_item, SUM(quantidade) AS total_vendido
+FROM itens_pedido
+INNER JOIN cardapio ON itens_pedido.id_item = cardapio.cardapioID
+GROUP BY nome_item
+ORDER BY total_vendido DESC;
+
+-- Deletar pedidos anteriores a 2024-09-09
+DELETE FROM pedidos WHERE data_pedido < '2024-09-09';
+
+-- Deletar dependências da tabela itens_pedido antes de deletar o item no cardápio
+DELETE FROM itens_pedido WHERE id_item = (
+    SELECT cardapioID FROM cardapio WHERE nome_item = 'Carne de Javali'
+);
+
+-- Deletar item do cardápio
+DELETE FROM cardapio WHERE nome_item = 'Carne de Javali';
+
+-- Deletar pedidos que referenciam a mesa com ID 2
+DELETE FROM pedidos WHERE id_mesa = 2;
+
+-- Deletar mesa com ID 2
+DELETE FROM mesa WHERE mesaID = 2;
+
