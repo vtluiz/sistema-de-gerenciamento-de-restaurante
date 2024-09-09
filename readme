@@ -1,0 +1,52 @@
+# Sistema de Gerenciamento de Restaurante
+
+Este projeto é um sistema de gerenciamento de restaurante, desenvolvido para gerenciar operações de pedidos, mesas, cardápios e pagamentos. Utiliza SQL para criar e gerenciar o banco de dados, e inclui tabelas para clientes, mesas, cardápios, pedidos, itens dos pedidos e pagamentos.
+
+## Estrutura do Banco de Dados
+
+O banco de dados contém as seguintes tabelas:
+
+- **cliente**: Armazena informações sobre os clientes.
+- **mesa**: Armazena informações sobre as mesas do restaurante.
+- **cardapio**: Armazena informações sobre os itens do cardápio.
+- **pedidos**: Armazena informações sobre os pedidos realizados.
+- **itens_pedido**: Armazena informações sobre os itens em cada pedido.
+- **pagamentos**: Armazena informações sobre os pagamentos realizados.
+
+## Scripts SQL
+
+Os scripts SQL fornecidos realizam as seguintes operações:
+
+1. **Criação e Estruturação do Banco de Dados**:
+   - Criação do banco de dados `restaurante`.
+   - Criação das tabelas `cliente`, `mesa`, `cardapio`, `pedidos`, `itens_pedido` e `pagamentos`.
+   - Definição de chaves primárias e estrangeiras.
+   - Inserção de dados iniciais.
+
+2. **Consultas e Manutenção**:
+   - Consulta para obter os itens mais vendidos.
+   - Deleção de pedidos antigos.
+   - Deleção de itens do cardápio e suas dependências.
+   - Deleção de pedidos e mesas específicas.
+
+## Como Executar
+
+1. **Executar Scripts SQL**:
+   - Utilize um cliente MySQL (como MySQL Workbench ou phpMyAdmin) para executar o script SQL que cria e popula o banco de dados.
+
+2. **Consultas e Manutenção**:
+   - Após a criação do banco de dados, você pode executar consultas e comandos de manutenção conforme necessário.
+
+## Requisitos
+
+- MySQL ou outro banco de dados compatível com SQL.
+- Um cliente de banco de dados para executar os scripts.
+
+## Contribuições
+
+Sinta-se à vontade para contribuir com melhorias, sugestões ou correções. Faça um fork deste repositório e envie um pull request.
+
+## Licença
+
+Este projeto está licenciado sob a [Licença MIT](LICENSE).
+
